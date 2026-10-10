@@ -3,8 +3,8 @@ class Code2pdf < Formula
 
   desc "Convert source code files to PDF with syntax highlighting and CJK support"
   homepage "https://github.com/readbysearch/code2pdf"
-  url "https://github.com/readbysearch/code2pdf/archive/refs/tags/v3.1.1.tar.gz"
-  sha256 "bdd1d044adaba67a099e8fc5b81f47c4fcc26d062a0abbc8abee0feda037b418"
+  url "https://github.com/readbysearch/code2pdf/archive/refs/tags/v3.2.tar.gz"
+  sha256 "1362e623d6a86a34506cd6bde5e35a9d90a81ea13dfcc9cd40e63807bd3c4bea"
   license "AGPL-3.0-only"
 
   depends_on "cffi" => :no_linkage
@@ -76,20 +76,17 @@ class Code2pdf < Formula
     venv = virtualenv_create(libexec, "python3.14")
     venv.pip_install resources
 
-    # Point the launchers at this keg instead of $(brew --prefix) or their own symlinked location
-    inreplace "bin/code2pdf" do |s|
-      s.gsub! 'BREW_PREFIX="$(brew --prefix)"', ""
-      s.gsub! 'INSTALL_DIR="$BREW_PREFIX/opt/code2pdf"', "INSTALL_DIR=\"#{opt_prefix}\""
-    end
-    inreplace "bin/code2txt", 'SCRIPTS_DIR="$INSTALL_DIR/scripts"', "SCRIPTS_DIR=\"#{opt_prefix}/scripts\""
-
     prefix.install "scripts", "config"
     (libexec/"launchers").install "bin/code2pdf", "bin/code2txt"
 
-    # The scripts call plain `python3`; put the virtualenv first so it gets pygments + weasyprint
-    path = [libexec/"bin", formula_opt_bin("ghostscript"), formula_opt_bin("jq"), "$PATH"].join(":")
+    # CODE2PDF_HOME points the launchers at this keg; the scripts call plain `python3`,
+    # so put the virtualenv (pygments + weasyprint) first on PATH
+    env = {
+      CODE2PDF_HOME: opt_prefix,
+      PATH:          [libexec/"bin", formula_opt_bin("ghostscript"), formula_opt_bin("jq"), "$PATH"].join(":"),
+    }
     %w[code2pdf code2txt].each do |cmd|
-      (bin/cmd).write_env_script libexec/"launchers"/cmd, PATH: path
+      (bin/cmd).write_env_script libexec/"launchers"/cmd, env
     end
   end
 
