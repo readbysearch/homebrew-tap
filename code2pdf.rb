@@ -3,8 +3,8 @@ class Code2pdf < Formula
 
   desc "Print source code to PDF with syntax highlighting, contents and CJK support"
   homepage "https://github.com/readbysearch/code2pdf"
-  url "https://github.com/readbysearch/code2pdf/archive/refs/tags/v3.4.tar.gz"
-  sha256 "b7006234aff704d23b5dc6945fe6c592200998a65daa1ffe8b41ea395d0bfedb"
+  url "https://github.com/readbysearch/code2pdf/archive/refs/tags/v3.5.tar.gz"
+  sha256 "d75d43ffbdf0eac64517fa520b4e2aabbe08d5aed35dba19f276fdea14ae5f4b"
   license "AGPL-3.0-only"
 
   depends_on "cffi" => :no_linkage
@@ -14,7 +14,8 @@ class Code2pdf < Formula
 
   uses_from_macos "libffi"
 
-  # WeasyPrint and its pure-Python dependencies, mirrored from homebrew-core's weasyprint formula
+  # WeasyPrint and its pure-Python dependencies (mirrored from homebrew-core's weasyprint formula),
+  # plus Pygments and pypdf (joins big documents rendered in parts)
   resource "brotli" do
     url "https://files.pythonhosted.org/packages/f7/16/c92ca344d646e71a43b8bb353f0a6490d7f6e06210f8554c8f874e454285/brotli-1.2.0.tar.gz"
     sha256 "e310f77e41941c13340a95976fe66a8a95b01e783d430eeaf7a2f87e0a57dd0a"
@@ -38,6 +39,11 @@ class Code2pdf < Formula
   resource "pygments" do
     url "https://files.pythonhosted.org/packages/49/2e/ced460408999b33da6b31b0021b0f37d329e202d4169aeb164493778f25b/pygments-2.21.0.tar.gz"
     sha256 "610ca751c9bc2492b38eb9a38a7fbc93edbbb2d7182edaf34e66ae493dee5c8c"
+  end
+
+  resource "pypdf" do
+    url "https://files.pythonhosted.org/packages/45/7e/d08c72b29e89b1ad14acaae817685ca06bac93691bddfd4fac08a703e5b0/pypdf-6.20.0.tar.gz"
+    sha256 "72b1e897fef7f5bbed7f2a93881a4861d98dbf25ae39981c8a023583239edbda"
   end
 
   resource "pyphen" do
@@ -99,5 +105,13 @@ class Code2pdf < Formula
 
     system bin/"code2txt", "--include-types", "py", "-o", "out.txt", testpath
     assert_match "Hello, World!", (testpath/"out.txt").read
+
+    # Force parts mode so the pypdf join is exercised
+    (testpath/"big").mkpath
+    3.times { |i| (testpath/"big/m#{i}.py").write("x = 1\n" * 80) }
+    with_env(CODE2PDF_PART_PAGES: "1", CODE2PDF_JOBS: "2") do
+      system bin/"code2pdf", "-a", testpath/"big"
+    end
+    assert_match(/^%PDF-/, File.binread(testpath/"big/merged.pdf", 8))
   end
 end
