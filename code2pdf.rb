@@ -3,8 +3,8 @@ class Code2pdf < Formula
 
   desc "Print source code to PDF with syntax highlighting, contents and CJK support"
   homepage "https://github.com/readbysearch/code2pdf"
-  url "https://github.com/readbysearch/code2pdf/archive/refs/tags/v3.8.tar.gz"
-  sha256 "5d404ca7aa1b65f8d58dd4f9f1f682ba1753a0e0eb3cb2b43a69c7fad696aeea"
+  url "https://github.com/readbysearch/code2pdf/archive/refs/tags/v3.9.tar.gz"
+  sha256 "08a232e7cf065b2a886d3b3ab075529337361530e47a11608c93321ae9853243"
   license "AGPL-3.0-only"
 
   depends_on "cffi" => :no_linkage
