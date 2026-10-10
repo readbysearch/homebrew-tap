@@ -32,8 +32,6 @@ brew install readbysearch/tap/code2pdf
 Everything is installed automatically; no `pip install` needed:
 - Python 3.14 with Pygments (syntax highlighting) and WeasyPrint (HTML → PDF), in a private virtualenv
 - pango (text layout, including Chinese/Japanese/Korean)
-- ghostscript (PDF merging)
-- jq (JSON processing)
 
 ## Updating
 

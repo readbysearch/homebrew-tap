@@ -3,13 +3,11 @@ class Code2pdf < Formula
 
   desc "Convert source code files to PDF with syntax highlighting and CJK support"
   homepage "https://github.com/readbysearch/code2pdf"
-  url "https://github.com/readbysearch/code2pdf/archive/refs/tags/v3.2.tar.gz"
-  sha256 "1362e623d6a86a34506cd6bde5e35a9d90a81ea13dfcc9cd40e63807bd3c4bea"
+  url "https://github.com/readbysearch/code2pdf/archive/refs/tags/v3.3.tar.gz"
+  sha256 "cc73d00ce35243793793ce9b6ed70d1324ee5f536ef3c23212144d362076fbbd"
   license "AGPL-3.0-only"
 
   depends_on "cffi" => :no_linkage
-  depends_on "ghostscript"
-  depends_on "jq"
   depends_on "pango"
   depends_on "pillow"
   depends_on "python@3.14"
@@ -83,7 +81,7 @@ class Code2pdf < Formula
     # so put the virtualenv (pygments + weasyprint) first on PATH
     env = {
       CODE2PDF_HOME: opt_prefix,
-      PATH:          [libexec/"bin", formula_opt_bin("ghostscript"), formula_opt_bin("jq"), "$PATH"].join(":"),
+      PATH:          "#{libexec}/bin:$PATH",
     }
     %w[code2pdf code2txt].each do |cmd|
       (bin/cmd).write_env_script libexec/"launchers"/cmd, env
