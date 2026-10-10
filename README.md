@@ -1,18 +1,31 @@
-# homebrew-code2pdf
+# readbysearch/homebrew-tap
 
-Homebrew formula for [code2pdf](https://github.com/readbysearch/code2pdf) - A tool for converting source code to PDF with syntax highlighting.
+Homebrew formulae from readbysearch. Currently:
+
+- [code2pdf](https://github.com/readbysearch/code2pdf) — convert source code to PDF with syntax highlighting and CJK support (also installs `code2txt`)
 
 ## Installation
 
 ```bash
-# Add this tap
-brew tap readbysearch/code2pdf
+brew install readbysearch/tap/code2pdf
+```
 
-# Install code2pdf
+Or tap once, then use short names:
+
+```bash
+brew tap readbysearch/tap
 brew install code2pdf
 ```
 
-Or in one step: `brew install readbysearch/code2pdf/code2pdf`. This installs both `code2pdf` and `code2txt`.
+### Moving from the old `readbysearch/code2pdf` tap
+
+This repository used to be `readbysearch/homebrew-code2pdf`. The old tap keeps working through GitHub's redirect, but to switch to the new name:
+
+```bash
+brew uninstall code2pdf
+brew untap readbysearch/code2pdf
+brew install readbysearch/tap/code2pdf
+```
 
 ## Dependencies
 
@@ -42,16 +55,15 @@ brew doctor
 2. If problems persist, you can try:
 ```bash
 brew uninstall code2pdf
-brew untap readbysearch/code2pdf
-brew tap readbysearch/code2pdf
-brew install code2pdf
+brew untap readbysearch/tap
+brew install readbysearch/tap/code2pdf
 ```
 
-3. If you still have issues, please [open an issue](https://github.com/readbysearch/homebrew-code2pdf/issues) in this repository.
+3. If you still have issues, please [open an issue](https://github.com/readbysearch/homebrew-tap/issues) in this repository.
 
 ## Contributing
 
-If you find any issues with the formula, please [open an issue](https://github.com/readbysearch/homebrew-code2pdf/issues) or submit a pull request.
+If you find any issues with the formula, please [open an issue](https://github.com/readbysearch/homebrew-tap/issues) or submit a pull request.
 
 For issues with the code2pdf tool itself, please visit the [main repository](https://github.com/readbysearch/code2pdf).
 

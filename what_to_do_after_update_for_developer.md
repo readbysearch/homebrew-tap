@@ -1,4 +1,4 @@
-Here's the process to update code2pdf and homebrew-code2pdf after making changes:
+Here's the process to update code2pdf and homebrew-tap after making changes:
 
 # 1. In code2pdf repo:
 
@@ -25,7 +25,7 @@ git push origin v1.0.1
 curl -L https://github.com/readbysearch/code2pdf/archive/refs/tags/v1.0.1.tar.gz | shasum -a 256
 ```
 
-# 3. In homebrew-code2pdf repo:
+# 3. In homebrew-tap repo:
 
 ```bash
 # Update code2pdf.rb with:
@@ -33,7 +33,7 @@ curl -L https://github.com/readbysearch/code2pdf/archive/refs/tags/v1.0.1.tar.gz
 # - New SHA256
 # - If you bump WeasyPrint/Pygments, refresh the `resource` blocks
 #   (copy them from homebrew-core's Formula/w/weasyprint.rb, which is kept in sync)
-brew audit --strict --online readbysearch/code2pdf/code2pdf
+brew audit --strict --online readbysearch/tap/code2pdf
 git add code2pdf.rb
 git commit -m "Update to v1.0.1"
 git push
@@ -42,9 +42,7 @@ git push
 # 4. Update local installation:
 
 ```bash
-brew uninstall code2pdf
-brew untap readbysearch/code2pdf
-brew tap readbysearch/code2pdf
-brew install code2pdf
+brew update
+brew upgrade readbysearch/tap/code2pdf
 ```
 The key is to always create a new version tag when you want to release updates, following semantic versioning (v1.0.0 → v1.0.1 for small fixes, v1.1.0 for new features, v2.0.0 for breaking changes).
