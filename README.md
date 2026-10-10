@@ -12,12 +12,15 @@ brew tap readbysearch/code2pdf
 brew install code2pdf
 ```
 
+Or in one step: `brew install readbysearch/code2pdf/code2pdf`. This installs both `code2pdf` and `code2txt`.
+
 ## Dependencies
 
-This formula will automatically install the following dependencies:
-- vim (for syntax highlighting)
-- ghostscript (for PDF operations)
-- jq (for JSON processing)
+Everything is installed automatically; no `pip install` needed:
+- Python 3.14 with Pygments (syntax highlighting) and WeasyPrint (HTML → PDF), in a private virtualenv
+- pango (text layout, including Chinese/Japanese/Korean)
+- ghostscript (PDF merging)
+- jq (JSON processing)
 
 ## Updating
 

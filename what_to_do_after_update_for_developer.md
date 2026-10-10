@@ -31,6 +31,9 @@ curl -L https://github.com/readbysearch/code2pdf/archive/refs/tags/v1.0.1.tar.gz
 # Update code2pdf.rb with:
 # - New version number (v1.0.1)
 # - New SHA256
+# - If you bump WeasyPrint/Pygments, refresh the `resource` blocks
+#   (copy them from homebrew-core's Formula/w/weasyprint.rb, which is kept in sync)
+brew audit --strict --online readbysearch/code2pdf/code2pdf
 git add code2pdf.rb
 git commit -m "Update to v1.0.1"
 git push
