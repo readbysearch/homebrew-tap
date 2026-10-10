@@ -2,7 +2,7 @@
 
 Homebrew formulae from readbysearch. Currently:
 
-- [code2pdf](https://github.com/readbysearch/code2pdf) — convert source code to PDF with syntax highlighting and CJK support (also installs `code2txt`)
+- [code2pdf](https://github.com/readbysearch/code2pdf) — print source code to PDF: syntax highlighting, a contents page, bundled IBM Plex fonts, colour or black & white themes, CJK support (also installs `code2txt`)
 
 ## Installation
 
