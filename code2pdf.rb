@@ -3,8 +3,8 @@ class Code2pdf < Formula
 
   desc "Print source code to PDF with syntax highlighting, contents and CJK support"
   homepage "https://github.com/readbysearch/code2pdf"
-  url "https://github.com/readbysearch/code2pdf/archive/refs/tags/v3.7.2.tar.gz"
-  sha256 "dec7df6bb78bea30711ecf061ab493a45e0dff9fa454924708ccfaf1446b8758"
+  url "https://github.com/readbysearch/code2pdf/archive/refs/tags/v3.8.tar.gz"
+  sha256 "5d404ca7aa1b65f8d58dd4f9f1f682ba1753a0e0eb3cb2b43a69c7fad696aeea"
   license "AGPL-3.0-only"
 
   depends_on "cffi" => :no_linkage
@@ -80,7 +80,7 @@ class Code2pdf < Formula
     venv = virtualenv_create(libexec, "python3.14")
     venv.pip_install resources
 
-    prefix.install "scripts", "config", "fonts", "VERSION"
+    prefix.install "scripts", "fonts", "VERSION"
     (libexec/"launchers").install "bin/code2pdf", "bin/code2txt"
 
     # CODE2PDF_HOME points the launchers at this keg; the scripts call plain `python3`,

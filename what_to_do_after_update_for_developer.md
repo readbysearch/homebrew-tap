@@ -1,48 +1,47 @@
-Here's the process to update code2pdf and homebrew-tap after making changes:
+# Releasing code2pdf
 
-# 1. In code2pdf repo:
+## 1. In readbysearch/code2pdf
 
 ```bash
-# Commit your changes
-git add .
-git commit -m "Your changes description"
-git push
+# Run the tests on macOS, and on an exact replica of the CI checkout (Ubuntu's own packages)
+.venv/bin/pytest -q
+git archive HEAD | tar -xf - -C /tmp/ci          # then run pytest in ubuntu:24.04 / 26.04 containers
 
-# Create new version tag (e.g., v1.0.1)
-git tag -a v1.0.1 -m "Release description"
-git push origin v1.0.1
-
-# Create GitHub release
-# Go to GitHub > Releases > Create new release
-# Select the new tag v1.0.1
-# Add release notes
-# Publish release
+git push origin main
+git tag -a vX.Y.Z -m "vX.Y.Z: what changed"
+git push origin vX.Y.Z
 ```
 
-# 2. Get new SHA256:
+Pushing the tag runs `.github/workflows/release-deb.yml`: it builds the `.deb`, runs lintian, tests
+it on fresh Ubuntu 24.04 and 26.04, then creates the GitHub release (notes generated from the
+commits) with `code2pdf_X.Y.Z_all.deb` and `code2pdf_all.deb` attached. There is nothing to do by
+hand on the Releases page. Check the run with `gh run list --workflow release-deb.yml`.
+
+## 2. New SHA256 of the tag tarball
 
 ```bash
-curl -L https://github.com/readbysearch/code2pdf/archive/refs/tags/v1.0.1.tar.gz | shasum -a 256
+curl -sL https://github.com/readbysearch/code2pdf/archive/refs/tags/vX.Y.Z.tar.gz | shasum -a 256
 ```
 
-# 3. In homebrew-tap repo:
+## 3. In this repo (readbysearch/homebrew-tap)
+
+Update `code2pdf.rb`:
+- `url` to the new tag (the version is read from the URL)
+- `sha256` from step 2
+- If you bump WeasyPrint/Pygments/pypdf, refresh the `resource` blocks (copy them from
+  homebrew-core's `Formula/w/weasyprint.rb`, which is kept in sync)
 
 ```bash
-# Update code2pdf.rb with:
-# - New version number (v1.0.1)
-# - New SHA256
-# - If you bump WeasyPrint/Pygments, refresh the `resource` blocks
-#   (copy them from homebrew-core's Formula/w/weasyprint.rb, which is kept in sync)
 brew audit --strict --online readbysearch/tap/code2pdf
-git add code2pdf.rb
-git commit -m "Update to v1.0.1"
-git push
+git commit -am "Update to vX.Y.Z" && git push
 ```
 
-# 4. Update local installation:
+## 4. Check
 
 ```bash
-brew update
-brew upgrade readbysearch/tap/code2pdf
+brew update && brew upgrade readbysearch/tap/code2pdf
+brew test readbysearch/tap/code2pdf
+code2pdf --version            # first line: code2pdf X.Y.Z (commit ..., date)
 ```
-The key is to always create a new version tag when you want to release updates, following semantic versioning (v1.0.0 → v1.0.1 for small fixes, v1.1.0 for new features, v2.0.0 for breaking changes).
+
+Follow semantic versioning: vX.Y.Z+1 for fixes, vX.Y+1.0 for new features, vX+1.0.0 for breaking changes.
