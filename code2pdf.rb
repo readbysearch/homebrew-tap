@@ -3,8 +3,8 @@ class Code2pdf < Formula
 
   desc "Print source code to PDF with syntax highlighting, contents and CJK support"
   homepage "https://github.com/readbysearch/code2pdf"
-  url "https://github.com/readbysearch/code2pdf/archive/refs/tags/v3.6.tar.gz"
-  sha256 "78a6e2a0665c71f85380eed829fe6dd0482df5caace42180386e3ad756baf650"
+  url "https://github.com/readbysearch/code2pdf/archive/refs/tags/v3.7.1.tar.gz"
+  sha256 "7c168d8ede18a4c40b1cfb24c1210c2fe8ef830a2c223abb38eda08b05144c2e"
   license "AGPL-3.0-only"
 
   depends_on "cffi" => :no_linkage
@@ -80,7 +80,7 @@ class Code2pdf < Formula
     venv = virtualenv_create(libexec, "python3.14")
     venv.pip_install resources
 
-    prefix.install "scripts", "config", "fonts"
+    prefix.install "scripts", "config", "fonts", "VERSION"
     (libexec/"launchers").install "bin/code2pdf", "bin/code2txt"
 
     # CODE2PDF_HOME points the launchers at this keg; the scripts call plain `python3`,
@@ -102,6 +102,8 @@ class Code2pdf < Formula
     system bin/"code2pdf", "-s", "hello.py"
     assert_path_exists testpath/"hello.pdf"
     assert_match(/^%PDF-/, File.binread(testpath/"hello.pdf", 8))
+
+    assert_match "installed: Homebrew", shell_output("#{bin}/code2pdf --version")
 
     system bin/"code2txt", "--include-types", "py", "-o", "out.txt", testpath
     assert_match "Hello, World!", (testpath/"out.txt").read
