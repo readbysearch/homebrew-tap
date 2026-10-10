@@ -47,6 +47,9 @@ brew upgrade code2pdf
 
 If you encounter any issues with installation:
 
+- **`A brew install ... process has already locked ...`**: Homebrew tripped over its own lock while upgrading shared dependencies. Run `brew install readbysearch/tap/code2pdf` again; the second run continues where the first stopped.
+- **`Could not symlink ... site-packages/pycparser`** (or another Python package): something was `pip install`ed into Homebrew's Python. code2pdf still works; to let Homebrew take over those files, run `brew link --overwrite pycparser`.
+
 1. First, try running:
 ```bash
 brew doctor
