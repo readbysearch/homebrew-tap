@@ -2,7 +2,10 @@
 
 Homebrew formulae from readbysearch. Currently:
 
-- [code2pdf](https://github.com/readbysearch/code2pdf) — print source code to PDF: syntax highlighting, a contents page, bundled IBM Plex fonts, colour or black & white themes, CJK support (also installs `code2txt`)
+- [code2pdf](https://github.com/readbysearch/code2pdf) — print source code to PDF: syntax highlighting, a contents page, bundled IBM Plex fonts, colour or black & white themes, CJK support. Choose files with globs or an exact list, print part of a file with its real line numbers, or print what changed in a commit with the changed lines marked (`--changed`). Also installs `code2txt`.
+
+For coding agents there is a Claude Code skill that tells them when and how to use code2pdf:
+`claude plugin install code2pdf --marketplace readbysearch/code2pdf`.
 
 ## Installation
 
