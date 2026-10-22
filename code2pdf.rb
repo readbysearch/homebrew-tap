@@ -14,8 +14,8 @@ class Code2pdf < Formula
 
   uses_from_macos "libffi"
 
-  # WeasyPrint and its pure-Python dependencies (mirrored from homebrew-core's weasyprint formula),
-  # plus Pygments and pypdf (joins big documents rendered in parts)
+  # WeasyPrint and its Python dependencies (mirrored from homebrew-core's weasyprint formula; brotli
+  # and zopfli are compiled), plus Pygments and pypdf (joins big documents rendered in parts)
   resource "brotli" do
     url "https://files.pythonhosted.org/packages/f7/16/c92ca344d646e71a43b8bb353f0a6490d7f6e06210f8554c8f874e454285/brotli-1.2.0.tar.gz"
     sha256 "e310f77e41941c13340a95976fe66a8a95b01e783d430eeaf7a2f87e0a57dd0a"
