@@ -21,10 +21,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # Apple silicon on each macOS Homebrew supports (a bottle also serves later versions),
-        # Intel, and Linux in Homebrew's own container. Homebrew 7 has no bottles for macOS 14:
-        # there code2pdf's dependencies build from source, so test-bot skips it.
-        os: [ macos-15, macos-26, macos-15-intel ]
+        # Apple silicon on each macOS GitHub has (a bottle also serves later versions), and Linux
+        # in Homebrew's own container. Not macOS 14 or Intel Macs: homebrew-core has no bottles
+        # of code2pdf's dependencies for them (Python, Pango, Pillow), so they build from source.
+        os: [ macos-15, macos-26 ]
         include:
           - os: ubuntu-latest
             container:
@@ -102,7 +102,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ macos-15, macos-26, macos-15-intel ]
+        os: [ macos-15, macos-26 ]
         include:
           - os: ubuntu-latest
             container:

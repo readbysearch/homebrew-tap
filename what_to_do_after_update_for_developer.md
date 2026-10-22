@@ -50,8 +50,9 @@ Don't push the formula to `main` directly: the new version would have no bottles
 install would build code2pdf from source again (2 to 3 minutes instead of seconds).
 
 The pull request's checks (`.github/workflows/tests.yml`) build a bottle, a pre-built code2pdf, on
-each platform: Apple silicon on macOS 15 and 26, Intel on macOS 15, and Linux. (Homebrew 7 has no
-bottles for macOS 14, so there everything builds from source.) `brew test-bot`
+each platform: Apple silicon on macOS 15 and 26 (the 26 bottle also serves later versions), and
+Linux. Not macOS 14 or Intel Macs: homebrew-core has no bottles of Python, Pango or Pillow for them,
+so there everything builds from source. `brew test-bot`
 reinstalls code2pdf from each bottle and runs the formula's test; then the `pour` job installs it
 on a fresh runner, as a user's `brew install` would, and prints with it (`.github/check.py`). Its
 log shows how long the install took, and the first and the second print.
