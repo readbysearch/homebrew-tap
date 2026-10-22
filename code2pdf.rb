@@ -7,6 +7,14 @@ class Code2pdf < Formula
   sha256 "8048b742794817cb142b4b095d15c05520b3277cafc271d88f8f3758524e36a4"
   license "AGPL-3.0-only"
 
+  bottle do
+    root_url "https://github.com/readbysearch/homebrew-tap/releases/download/code2pdf-3.13"
+    rebuild 1
+    sha256 cellar: :any_skip_relocation, arm64_tahoe:   "103d6083e9d38d2ab4a4c2def5cca0e8293c89e6973e08edfaedaf7260955603"
+    sha256 cellar: :any_skip_relocation, arm64_sequoia: "5a02777b6e5eed5e60c98156102dead1a886804bf763d9ad4919fa37457144e3"
+    sha256 cellar: :any,                 x86_64_linux:  "64fc15ff7dccf50305099e41516edba7d3493c52ebab739496d5d06248f4018a"
+  end
+
   depends_on "cffi" => :no_linkage
   depends_on "pango"
   depends_on "pillow"
