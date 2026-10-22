@@ -13,6 +13,8 @@ For coding agents there is a Claude Code skill that tells them when and how to u
 brew install readbysearch/tap/code2pdf
 ```
 
+It installs a pre-built code2pdf (a bottle) on Apple silicon Macs with macOS 15 or later and on Linux, which takes seconds once its libraries are in place. On Intel Macs and on macOS 14 or earlier, Homebrew has no pre-built Python, Pango or Pillow, so it builds everything from source, which can take half an hour.
+
 Or tap once, then use short names:
 
 ```bash
