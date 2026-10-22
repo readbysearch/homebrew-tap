@@ -137,8 +137,12 @@ jobs:
           HOMEBREW_DEVELOPER: 1
         run: |
           time brew install "$BOTTLES"/code2pdf--*.bottle*.tar.gz
-          brew info readbysearch/tap/code2pdf | tee "$RUNNER_TEMP/info.txt"
-          grep -q 'Poured from bottle' "$RUNNER_TEMP/info.txt"
+          brew info --json=v2 readbysearch/tap/code2pdf |
+            "$(brew --prefix readbysearch/tap/code2pdf)/libexec/bin/python" -I -c '
+          import json, sys
+          installed = json.load(sys.stdin)["formulae"][0]["installed"][0]
+          print(installed)
+          sys.exit(0 if installed["poured_from_bottle"] else "not poured from the bottle")'
 
       - name: Print with it
         run: |
