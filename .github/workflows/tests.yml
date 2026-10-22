@@ -130,9 +130,11 @@ jobs:
         if: runner.os == 'Linux'
         run: sudo apt-get update -qq && sudo apt-get install -y -qq fonts-noto-cjk
 
+      # A user's brew downloads the bottle; here it's a file, which brew installs only for developers
       - name: Install code2pdf from the bottle
         env:
           BOTTLES: ${{ runner.temp }}/bottles
+          HOMEBREW_DEVELOPER: 1
         run: |
           time brew install "$BOTTLES"/code2pdf--*.bottle*.tar.gz
           brew info readbysearch/tap/code2pdf | tee "$RUNNER_TEMP/info.txt"
