@@ -69,6 +69,9 @@ gh workflow run publish.yml -f pull_request=N
 block, and uploads the bottles to this repo's release `code2pdf-X.Y`. If a bottle turns out bad,
 delete the `bottle do` block and push: installs build from source again, as before.
 
+The push to `main` then runs the `published-bottles` job (also weekly), which downloads every
+bottle the formula lists and checks it against the formula's checksums.
+
 ## 4. Check
 
 ```bash

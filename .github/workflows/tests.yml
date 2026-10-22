@@ -9,6 +9,8 @@ on:
     branches:
       - main
   pull_request:
+  schedule:
+    - cron: "0 7 * * 1"  # weekly: the published bottles are still there and intact
 
 permissions: {}
 
@@ -76,6 +78,32 @@ jobs:
         with:
           name: bottles_${{ matrix.os }}
           path: '*.bottle.*'
+
+  # After publish.yml, and weekly: every bottle the formula lists can be downloaded and matches its
+  # checksum. The extension's CI fetches only the newest macOS's.
+  published-bottles:
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/homebrew/brew:main
+      options: --privileged
+    permissions:
+      contents: read
+    steps:
+      - name: Set up Homebrew
+        uses: Homebrew/actions/setup-homebrew@eb02c69dbabdb66ff183c614f4ce7ab3c077592c # 2026.10.12.1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Download every bottle the formula lists
+        run: |
+          brew install jq
+          tags=$(brew info --json=v2 readbysearch/tap/code2pdf | jq -r '.formulae[0].bottle.stable.files | keys[]')
+          [[ -n "$tags" ]] || { echo "the formula lists no bottles"; exit 1; }
+          for tag in $tags
+          do
+            brew fetch --force --bottle-tag="$tag" readbysearch/tap/code2pdf
+          done
 
   # Only a pull request that changes the formula has bottles to pour
   changes:
