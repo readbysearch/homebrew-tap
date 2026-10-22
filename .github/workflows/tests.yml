@@ -21,9 +21,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # Apple silicon on each macOS GitHub has (a bottle also serves later macOS versions),
-        # Intel, and Linux in Homebrew's own container
-        os: [ macos-14, macos-15, macos-26, macos-15-intel ]
+        # Apple silicon on each macOS Homebrew supports (a bottle also serves later versions),
+        # Intel, and Linux in Homebrew's own container. Homebrew 7 has no bottles for macOS 14:
+        # there code2pdf's dependencies build from source, so test-bot skips it.
+        os: [ macos-15, macos-26, macos-15-intel ]
         include:
           - os: ubuntu-latest
             container:
@@ -101,7 +102,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ macos-14, macos-15, macos-26, macos-15-intel ]
+        os: [ macos-15, macos-26, macos-15-intel ]
         include:
           - os: ubuntu-latest
             container:
@@ -133,7 +134,7 @@ jobs:
         env:
           BOTTLES: ${{ runner.temp }}/bottles
         run: |
-          time brew install --formula "$BOTTLES"/code2pdf--*.bottle*.tar.gz
+          time brew install "$BOTTLES"/code2pdf--*.bottle*.tar.gz
           brew info readbysearch/tap/code2pdf | tee "$RUNNER_TEMP/info.txt"
           grep -q 'Poured from bottle' "$RUNNER_TEMP/info.txt"
 
