@@ -47,17 +47,19 @@ git push -u origin code2pdf-X.Y && gh pr create --fill
 ```
 
 Don't push the formula to `main` directly: the new version would have no bottles, and every
-install would build code2pdf from source again (2 to 3 minutes instead of seconds).
+install would build code2pdf from source again (about 3 minutes on a clean Mac instead of 1).
 
 The pull request's checks (`.github/workflows/tests.yml`) build a bottle, a pre-built code2pdf, on
 each platform: Apple silicon on macOS 15 and 26 (the 26 bottle also serves later versions), and
 Linux. Not macOS 14 or Intel Macs: homebrew-core has no bottles of Python, Pango or Pillow for them,
-so there everything builds from source. `brew test-bot`
-reinstalls code2pdf from each bottle and runs the formula's test; then the `pour` job installs it
-on a fresh runner, as a user's `brew install` would, and prints with it (`.github/check.py`). Its
-log shows how long the install took, and the first and the second print.
+so there everything builds from source. `brew test-bot` reinstalls code2pdf from each bottle and
+runs the formula's test; then the `pour` job installs it on a fresh runner, as a user's
+`brew install` would, and prints with it (`.github/check.py`). Its log shows how long the install
+took, and the first and the second print.
 
-When they pass, publish the bottles:
+When they pass, publish the bottles, which also merges the pull request (don't use GitHub's merge
+button; if it was used, the same command still publishes, from the pull request's last passing
+checks):
 
 ```bash
 gh workflow run publish.yml -f pull_request=N
@@ -71,7 +73,7 @@ delete the `bottle do` block and push: installs build from source again, as befo
 
 ```bash
 brew update && brew upgrade readbysearch/tap/code2pdf
-brew info readbysearch/tap/code2pdf | grep 'Poured from bottle'
+brew info --json=v2 readbysearch/tap/code2pdf | jq '.formulae[0].installed[0].poured_from_bottle'   # true
 brew test readbysearch/tap/code2pdf
 code2pdf --version            # first line: code2pdf X.Y (commit ..., date)
 ```
