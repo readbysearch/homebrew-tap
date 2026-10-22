@@ -2,7 +2,9 @@
 #   gh workflow run publish.yml -f pull_request=N
 # brew pr-pull takes the pull request's commits, adds a commit with the formula's `bottle do`
 # block, uploads the bottles to this tap's GitHub release code2pdf-<version> (the root URL
-# tests.yml gave them) and pushes main.
+# tests.yml gave them) and pushes main. Don't merge the pull request with GitHub's button; if it
+# was, its commits are on main already and pr-pull would find nothing to bottle, so this
+# publishes the bottles from its last passing checks with brew pr-upload instead.
 name: brew pr-pull
 
 on:
@@ -47,10 +49,25 @@ jobs:
           HOMEBREW_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           HOMEBREW_GIT_COMMITTER_NAME: ${{ steps.git_setup.outputs.name }}
           HOMEBREW_GIT_COMMITTER_EMAIL: ${{ steps.git_setup.outputs.email }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           HEAD_SHA: ${{ inputs.head_sha }}
           PULL_REQUEST: ${{ inputs.pull_request }}
         run: |
-          if [[ -n "$HEAD_SHA" ]]
+          state=$(gh pr view "$PULL_REQUEST" -R "$GITHUB_REPOSITORY" --json state --jq .state)
+          if [[ "$state" == MERGED ]]
+          then
+            head=$(gh pr view "$PULL_REQUEST" -R "$GITHUB_REPOSITORY" --json headRefOid --jq .headRefOid)
+            run=$(gh run list -R "$GITHUB_REPOSITORY" --workflow tests.yml --commit "$head" --event pull_request \
+              --status success --limit 1 --json databaseId --jq '.[0].databaseId')
+            [[ -n "$run" ]] || { echo "no passing tests.yml run for $head"; exit 1; }
+            dir=$(mktemp -d)
+            echo "bottle_path=$dir" >> "$GITHUB_OUTPUT"
+            cd "$dir"
+            gh run download "$run" -R "$GITHUB_REPOSITORY" --pattern 'bottles_*'
+            mv bottles_*/* . && rmdir bottles_*
+            ls -l
+            brew pr-upload --debug
+          elif [[ -n "$HEAD_SHA" ]]
           then
             brew pr-pull --debug --retain-bottle-dir --tap="$GITHUB_REPOSITORY" --head-sha="$HEAD_SHA" \
               "$PULL_REQUEST"
